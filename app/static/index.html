@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LedgerLens &middot; Apple Design Gemma 4 Auditor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000;
+    --canvas: #090a0f;
+    --card: rgba(26, 31, 46, 0.45);
+    --card-hover: rgba(36, 44, 66, 0.55);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-border-highlight: rgba(255, 255, 255, 0.16);
+    --fg: #f5f5f7;
+    --fg-muted: #86868b;
+    --fg-secondary: #a1a1a6;
+    --apple-blue: #0071e3;
+    --apple-blue-hover: #0077ed;
+    --apple-blue-glow: rgba(0, 113, 227, 0.3);
+    --apple-cyan: #29d3f5;
+    --apple-green: #30d158;
+    --apple-green-bg: rgba(48, 209, 88, 0.12);
+    --apple-orange: #ff9f0a;
+    --apple-orange-bg: rgba(255, 159, 10, 0.12);
+    --apple-red: #ff453a;
+    --apple-red-bg: rgba(255, 69, 58, 0.12);
+    --apple-purple: #bf5af2;
+    --font: -apple-system, BlinkMacSystemFont, "Plus Jakarta Sans", "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+    --mono: "JetBrains Mono", SFMono-Regular, Menlo, monospace;
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 26px;
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 14px/1.55 var(--font);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    background-image: 
+      radial-gradient(ellipse 65% 45% at 50% -10%, rgba(0, 113, 227, 0.16), transparent 70%),
+      radial-gradient(circle at 100% 100%, rgba(191, 90, 242, 0.08), transparent 45%),
+      radial-gradient(circle at 0% 90%, rgba(41, 211, 245, 0.05), transparent 40%);
+  }
+
+  /* Apple Frosted Navbar */
+  header {
+    padding: 12px 28px;
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(10, 12, 16, 0.75);
+    backdrop-filter: blur(28px) saturate(180%);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #0071e3, #29d3f5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 800;
+    color: white;
+    box-shadow: 0 4px 16px var(--apple-blue-glow);
+  }
+  .brand-text h1 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: #fff;
+  }
+  .brand-text h1 span {
+    background: linear-gradient(90deg, #29d3f5, #0071e3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .brand-sub {
+    font-size: 11px;
+    color: var(--fg-muted);
+    font-weight: 500;
+  }
+
+  /* Top Right Status Capsules */
+  .header-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .apple-pill {
+    font-size: 11.5px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(16px);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--fg-secondary);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .apple-pill:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--card-border-highlight);
+    color: #fff;
+    transform: translateY(-1px);
+  }
+  .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #64748b;
+  }
+  .dot.green { background: var(--apple-green); box-shadow: 0 0 10px rgba(48, 209, 88, 0.7); }
+  .dot.purple { background: var(--apple-purple); box-shadow: 0 0 10px rgba(191, 90, 242, 0.7); }
+  .dot.blue { background: var(--apple-blue); box-shadow: 0 0 10px rgba(0, 113, 227, 0.7); }
+
+  /* Main Workspace Layout */
+  main {
+    display: grid;
+    grid-template-columns: 410px 1fr;
+    gap: 22px;
+    padding: 24px 28px;
+    max-width: 1560px;
+    margin: 0 auto;
+    align-items: start;
+  }
+  @media (max-width: 1080px) {
+    main { grid-template-columns: 1fr; padding: 16px; }
+  }
+
+  /* Apple Glassmorphic Card */
+  .apple-card {
+    background: var(--card);
+    backdrop-filter: blur(32px) saturate(190%);
+    border: 1px solid var(--card-border);
+    border-top: 1px solid var(--card-border-highlight);
+    border-radius: var(--radius-xl);
+    padding: 22px;
+    box-shadow: var(--shadow-card);
+    position: relative;
+  }
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .card-heading {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--fg-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .step-bubble {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  /* File Dropzone */
+  #drop {
+    border: 1.5px dashed rgba(255, 255, 255, 0.16);
+    border-radius: var(--radius-md);
+    padding: 22px 14px;
+    text-align: center;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.02);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  #drop:hover, #drop.hot {
+    border-color: var(--apple-blue);
+    background: rgba(0, 113, 227, 0.06);
+    box-shadow: 0 0 24px var(--apple-blue-glow);
+  }
+  #drop img {
+    max-width: 100%;
+    max-height: 210px;
+    border-radius: 10px;
+    display: block;
+    margin: 0 auto 10px;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+  }
+  .drop-main { font-size: 13.5px; font-weight: 600; color: #fff; }
+  .drop-sub { font-size: 11.5px; color: var(--fg-muted); margin-top: 4px; }
+
+  /* Preset Receipts */
+  .presets-wrap { margin-top: 16px; }
+  .presets-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--fg-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .presets-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .preset-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 9px 11px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    text-align: left;
+  }
+  .preset-card:hover {
+    background: rgba(0, 113, 227, 0.12);
+    border-color: var(--apple-blue);
+    transform: translateY(-1.5px);
+  }
+  .preset-name { font-size: 12px; font-weight: 700; color: #fff; }
+  .preset-sub { font-size: 10.5px; color: var(--fg-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+
+  /* Apple Form Controls */
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fg-secondary);
+    margin: 14px 0 6px;
+  }
+  input, select, textarea {
+    font: inherit;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 9px 12px;
+    width: 100%;
+    transition: all 0.2s ease;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--apple-blue);
+    box-shadow: 0 0 0 3px var(--apple-blue-glow);
+  }
+  textarea { resize: vertical; min-height: 56px; font-size: 13px; line-height: 1.45; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* Apple Action Button */
+  button.apple-btn {
+    cursor: pointer;
+    background: linear-gradient(180deg, #0077ed, #0071e3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 14px;
+    padding: 13px 18px;
+    width: 100%;
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 6px 20px var(--apple-blue-glow);
+  }
+  button.apple-btn:hover:not(:disabled) {
+    background: linear-gradient(180deg, #1a88f5, #0077ed);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0, 113, 227, 0.45);
+  }
+  button.apple-btn:active:not(:disabled) {
+    transform: scale(0.985);
+  }
+  button.apple-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Apple Segmented Control (Tabs) */
+  .segmented-track {
+    display: flex;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    margin-bottom: 20px;
+    gap: 4px;
+  }
+  .segment {
+    flex: 1;
+    text-align: center;
+    padding: 7px 12px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--fg-secondary);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .segment:hover { color: #fff; }
+  .segment.on {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Real-time 5-Stage Stepper */
+  .stepper-bar {
+    display: flex;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 8px;
+    margin-bottom: 20px;
+    gap: 6px;
+    overflow-x: auto;
+  }
+  .step-node {
+    flex: 1;
+    min-width: 80px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.2s ease;
+    opacity: 0.4;
+  }
+  .step-node.active {
+    opacity: 1;
+    background: rgba(0, 113, 227, 0.15);
+    border: 1px solid var(--apple-blue);
+  }
+  .step-node.done {
+    opacity: 1;
+    background: var(--apple-green-bg);
+    border: 1px solid rgba(48, 209, 88, 0.35);
+  }
+  .step-node .icon { font-size: 13px; margin-bottom: 2px; }
+  .step-node .name { font-size: 10.5px; font-weight: 700; text-transform: uppercase; }
+  .step-node .time { font-size: 9.5px; font-family: var(--mono); color: var(--fg-muted); margin-top: 1px; }
+
+  /* Verdict Hero Banner */
+  .verdict-hero {
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    border: 1px solid transparent;
+  }
+  .verdict-hero.v-ok {
+    background: linear-gradient(135deg, rgba(48, 209, 88, 0.16), rgba(41, 211, 245, 0.06));
+    border-color: rgba(48, 209, 88, 0.35);
+  }
+  .verdict-hero.v-warn {
+    background: linear-gradient(135deg, rgba(255, 159, 10, 0.16), rgba(0, 113, 227, 0.06));
+    border-color: rgba(255, 159, 10, 0.35);
+  }
+  .verdict-hero.v-crit {
+    background: linear-gradient(135deg, rgba(255, 69, 58, 0.18), rgba(255, 159, 10, 0.08));
+    border-color: rgba(255, 69, 58, 0.4);
+  }
+  .verdict-badge-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    font-weight: 800;
+  }
+  .v-ok .verdict-badge-icon { background: var(--apple-green); color: white; }
+  .v-warn .verdict-badge-icon { background: var(--apple-orange); color: black; }
+  .v-crit .verdict-badge-icon { background: var(--apple-red); color: white; }
+
+  /* Metrics Apple Cards */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .m-box {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+  .m-label { font-size: 11px; color: var(--fg-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+  .m-value { font-size: 16px; font-weight: 800; color: #fff; margin-top: 3px; font-family: var(--mono); }
+
+  /* High-Impact Graphify Feature Card Inside Output */
+  .graph-banner-card {
+    background: linear-gradient(135deg, rgba(0, 113, 227, 0.12), rgba(191, 90, 242, 0.08));
+    border: 1px solid rgba(0, 113, 227, 0.35);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+  }
+  .graph-banner-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .graph-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .graph-icon-bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0071e3, #bf5af2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .graph-link-btn {
+    background: var(--apple-blue);
+    color: white;
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px var(--apple-blue-glow);
+  }
+  .graph-link-btn:hover {
+    background: var(--apple-blue-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 113, 227, 0.5);
+  }
+
+  /* Tables & Ledger */
+  .apple-box {
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+  .box-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .box-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--fg-secondary);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--card-border); }
+  th {
+    color: var(--fg-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+  }
+  td.num, th.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  .badge-balanced {
+    background: var(--apple-green-bg);
+    color: var(--apple-green);
+    border: 1px solid rgba(48, 209, 88, 0.3);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+
+  /* Findings */
+  .finding-row {
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .f-badge {
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+    margin-top: 2px;
+  }
+  .fb-crit { background: var(--apple-red-bg); color: var(--apple-red); border: 1px solid rgba(255, 69, 58, 0.35); }
+  .fb-warn { background: var(--apple-orange-bg); color: var(--apple-orange); border: 1px solid rgba(255, 159, 10, 0.35); }
+  .fb-info { background: rgba(0, 113, 227, 0.12); color: var(--apple-blue); border: 1px solid rgba(0, 113, 227, 0.35); }
+
+  /* Explanation Text */
+  .apple-prose {
+    line-height: 1.65;
+    font-size: 13.5px;
+    color: #e5e5ea;
+  }
+  .apple-prose p { margin: 0 0 10px; }
+  .apple-prose strong { color: #fff; font-weight: 700; }
+  .apple-prose ul { margin: 6px 0 12px 18px; padding: 0; }
+  .apple-prose li { margin-bottom: 4px; }
+
+  /* Empty State */
+  .empty-wrap {
+    text-align: center;
+    padding: 56px 20px;
+    color: var(--fg-muted);
+  }
+  .empty-icon { font-size: 36px; margin-bottom: 12px; opacity: 0.6; }
+
+  /* Spinner */
+  .spin {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-top-color: var(--apple-blue);
+    border-radius: 50%;
+    animation: rot 0.7s linear infinite;
+    vertical-align: -2px;
+  }
+  @keyframes rot { to { transform: rotate(360deg); } }
+
+  .apple-btn-sm {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--card-border);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .apple-btn-sm:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: var(--card-border-highlight);
+  }
+
+  /* Codebase Q&A Chips */
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .chip {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: var(--fg-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .chip:hover {
+    background: rgba(0, 113, 227, 0.12);
+    border-color: var(--apple-blue);
+    color: #fff;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-logo">&#9889;</div>
+    <div class="brand-text">
+      <h1>LedgerLens <span>Gemma 4</span></h1>
+      <div class="brand-sub">Apple Design &middot; Hybrid Gemma 4 Bill Auditor</div>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <a id="headerGraphLink" href="/api/graph" target="_blank" class="apple-pill" id="healthGraph" title="Click to view live interactive graph on localhost">
+      <span class="dot green"></span>
+      <span>Graphify: <b>204 Nodes Live &nearr;</b></span>
+    </a>
+    <div class="apple-pill" id="healthCloud">
+      <span class="dot green"></span>
+      <span>Cloud: <b>Gemma 4 Ready</b></span>
+    </div>
+    <button class="apple-pill" onclick="openBackendConfig()" title="Configure backend URL for Vercel deployment" style="cursor:pointer; border:none; background:rgba(255,255,255,0.07);">
+      <span>⚙️ <b>Backend</b></span>
+    </button>
+  </div>
+</header>
+
+<!-- Backend URL Config Modal -->
+<div id="configModal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.75); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); display:flex; align-items:center; justify-content:center;" onclick="if(event.target===this)closeBackendConfig()">
+  <div style="background:#1a1f2e; border:1px solid rgba(255,255,255,0.12); border-radius:20px; padding:28px; max-width:520px; width:calc(100% - 40px); box-shadow:0 32px 80px rgba(0,0,0,0.6);">
+    <div style="font-size:18px; font-weight:800; color:#fff; margin-bottom:6px;">⚙️ Backend Configuration</div>
+    <div style="font-size:13px; color:#86868b; margin-bottom:20px; line-height:1.5;">
+      When running on <b style="color:#fff;">Vercel</b>, this frontend needs to reach your local backend via a tunnel.<br>
+      Use <a href="https://ngrok.com" target="_blank" style="color:#29d3f5;">ngrok</a> or <a href="https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/" target="_blank" style="color:#29d3f5;">Cloudflare Tunnel</a> to expose port 8000.
+    </div>
+    <div style="margin-bottom:16px;">
+      <label style="font-size:12px; font-weight:600; color:#86868b; text-transform:uppercase; letter-spacing:0.05em;">Backend Base URL</label>
+      <div style="display:flex; gap:8px; margin-top:6px;">
+        <input id="apiBaseInput" placeholder="https://abc123.ngrok.io  (leave empty for localhost)" style="flex:1; padding:10px 14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:10px; color:#fff; font-size:13.5px; outline:none; font-family:var(--mono);" />
+      </div>
+    </div>
+    <div style="background:rgba(0,113,227,0.12); border:1px solid rgba(0,113,227,0.25); border-radius:10px; padding:12px; margin-bottom:20px; font-size:12px; color:#86868b; line-height:1.6;">
+      <b style="color:#29d3f5;">How to get a tunnel URL:</b><br>
+      • <code style="color:#fff;">ngrok http 8000</code> → copy the <code>https://xxx.ngrok.io</code> URL<br>
+      • <code style="color:#fff;">cloudflared tunnel --url http://localhost:8000</code> → copy the URL<br>
+      • Leave empty if accessing from the same machine as the backend.
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button onclick="saveBackendConfig()" style="flex:1; padding:11px; background:#0071e3; border:none; border-radius:10px; color:#fff; font-size:14px; font-weight:700; cursor:pointer;">Save &amp; Apply</button>
+      <button onclick="closeBackendConfig()" style="padding:11px 18px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); border-radius:10px; color:#fff; font-size:14px; cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<main>
+  <!-- ============ LEFT PANEL: Input & Document Controls ============ -->
+  <div class="apple-card">
+    <div class="card-top">
+      <div class="card-heading">
+        <span class="step-bubble">1</span> Bill Document
+      </div>
+      <button class="apple-btn-sm" id="clearBtn" style="display:none;">Clear</button>
+    </div>
+
+    <!-- Dropzone with clipboard paste (Ctrl+V) -->
+    <div id="drop" title="Click or Paste (Ctrl+V) bill image">
+      <div id="dropInner">
+        <div style="font-size: 30px; margin-bottom: 6px;">&#128247;</div>
+        <div class="drop-main">Drop bill photo or <span style="color:var(--apple-blue); text-decoration:underline;">browse</span></div>
+        <div class="drop-sub">JPG, PNG, WEBP &middot; or press <b>Ctrl+V</b> to paste screenshot</div>
+      </div>
+    </div>
+    <input type="file" id="file" accept="image/*" hidden />
+
+    <!-- 4 Realistic Bill Presets -->
+    <div class="presets-wrap">
+      <div class="presets-title">Instant Test Bill Presets</div>
+      <div class="presets-grid">
+        <div class="preset-card" id="presetRest">
+          <div class="preset-name">&#9749; Restaurant</div>
+          <div class="preset-sub">Shree Cafe (5% CGST/SGST)</div>
+        </div>
+        <div class="preset-card" id="presetMathErr">
+          <div class="preset-name">&#9888;&#65039; Math Error</div>
+          <div class="preset-sub">Grocery line items sum mismatch</div>
+        </div>
+        <div class="preset-card" id="presetTech">
+          <div class="preset-name">&#128187; Tech Hardware</div>
+          <div class="preset-sub">B2B Invoice (18% IGST input)</div>
+        </div>
+        <div class="preset-card" id="presetCab">
+          <div class="preset-name">&#128661; Cab Voucher</div>
+          <div class="preset-sub">Travel ride & toll receipt</div>
+        </div>
+      </div>
+    </div>
+
+    <label for="lang">Explanation Language</label>
+    <select id="lang">
+      <option value="English">English</option>
+      <option value="Hindi">Hindi (&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;)</option>
+      <option value="Marathi">Marathi (&#2350;&#2352;&#2368;&#2336;&#2368;)</option>
+      <option value="Telugu">Telugu (&#3108;&#3142;&#3122;&#3137;&#3095;&#3137;)</option>
+      <option value="Tamil">Tamil (&#2980;&#2990;&#3007;&#2996;&#3021;)</option>
+      <option value="Kannada">Kannada (&#3221;&#3240;&#3277;&#3240;&#3233;)</option>
+      <option value="Bengali">Bengali (&#2476;&#2494;&#2434;&#2482;&#2494;)</option>
+    </select>
+
+    <div class="row">
+      <div>
+        <label for="route">Routing Strategy</label>
+        <select id="route">
+          <option value="auto">Auto (Smart Triage)</option>
+          <option value="cloud_fast">Cloud Fast (26B-A4B)</option>
+          <option value="cloud_strong">Cloud Strong (31B)</option>
+        </select>
+      </div>
+      <div>
+        <label for="think">Thinking Mode</label>
+        <select id="think">
+          <option value="minimal" selected>Fast & Focused (Minimal)</option>
+          <option value="high">Deep Reasoning (High)</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="prompt">Auditor Instructions</label>
+    <textarea id="prompt">Audit this bill: check the line items, exact arithmetic, and GST rate, and generate double-entry ledger postings.</textarea>
+
+    <button class="apple-btn" id="run" disabled>
+      <span>&#128269;</span> Audit the Bill
+    </button>
+  </div>
+
+  <!-- ============ RIGHT PANEL: Live Results & Analytics ============ -->
+  <div class="apple-card">
+    <!-- Real-time 5-Stage Stepper -->
+    <div class="stepper-bar">
+      <div class="step-node" id="pipeRoute">
+        <div class="icon">&#9889;</div>
+        <div class="name">0. Route</div>
+        <div class="time" id="timeRoute">&mdash;</div>
+      </div>
+      <div class="step-node" id="pipeExtract">
+        <div class="icon">&#128065;</div>
+        <div class="name">1. Extract</div>
+        <div class="time" id="timeExtract">&mdash;</div>
+      </div>
+      <div class="step-node" id="pipePython">
+        <div class="icon">&#129518;</div>
+        <div class="name">2. Math (Py)</div>
+        <div class="time" id="timePython">&mdash;</div>
+      </div>
+      <div class="step-node" id="pipeRedact">
+        <div class="icon">&#128737;</div>
+        <div class="name">3. Redact</div>
+        <div class="time" id="timeRedact">&mdash;</div>
+      </div>
+      <div class="step-node" id="pipeAdvise">
+        <div class="icon">&#129504;</div>
+        <div class="name">4. Advise</div>
+        <div class="time" id="timeAdvise">&mdash;</div>
+      </div>
+    </div>
+
+    <!-- Apple Segmented Navigation -->
+    <div class="segmented-track">
+      <div class="segment on" data-tab="audit">&#128203; Audit Report</div>
+      <div class="segment" data-tab="graph">&#128376; Knowledge Graph</div>
+      <div class="segment" data-tab="code">&#128172; Codebase Assistant</div>
+      <div class="segment" data-tab="trace">&#128200; Benchmark Trace</div>
+    </div>
+
+    <!-- TAB 1: Audit Report -->
+    <div id="tab-audit">
+      <div id="auditOut">
+        <div class="empty-wrap">
+          <div class="empty-icon">&#128221;</div>
+          <div style="font-size: 16px; font-weight: 700; color: #fff;">Ready to Audit</div>
+          <p style="max-width: 380px; margin: 6px auto 0;">Drop a receipt photo or click one of the presets on the left to start auditing.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Knowledge Graph (Live Graphify Visualization) -->
+    <div id="tab-graph" style="display:none">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div>
+          <div style="font-size:14px; font-weight:700; color:#fff;">Live Codebase Knowledge Graph</div>
+          <div style="font-size:12px; color:var(--fg-muted);">Interactive map generated by Graphify: 204 nodes, 409 edges, 14 architectural communities.</div>
+        </div>
+        <a id="graphOpenBtn" href="#" target="_blank" class="apple-btn-sm" style="text-decoration:none;">Open Fullscreen &nearr;</a>
+      </div>
+      <iframe id="graphFrame" src="" style="width:100%; height:590px; border:1px solid var(--card-border); border-radius:14px; background:#fff;"></iframe>
+    </div>
+
+    <!-- TAB 3: Codebase Assistant -->
+    <div id="tab-code" style="display:none">
+      <div class="chips">
+        <span class="chip" onclick="askCode('How does the hybrid router decide between local E2B and cloud Gemma 4?')">Router Triage</span>
+        <span class="chip" onclick="askCode('Why does Python compute arithmetic instead of letting Gemma calculate sums?')">Python Math Rule</span>
+        <span class="chip" onclick="askCode('How does the local tier perform PII redaction on GSTIN and contact details?')">PII Redaction</span>
+        <span class="chip" onclick="askCode('What is the Graphify knowledge graph and what are its God Nodes?')">Graphify Architecture</span>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <input id="codeQ" placeholder="Ask questions about this project's architecture, Gemma 4, or Graphify tools..." />
+        <button class="apple-btn-sm" id="codeRun" style="padding:0 16px; background:var(--apple-blue); border:none;">Ask</button>
+      </div>
+
+      <div id="codeOut" style="margin-top: 16px;">
+        <div class="empty-wrap">
+          <div class="empty-icon">&#129504;</div>
+          <div style="font-weight: 700; color: #fff;">Ask LedgerLens Architecture</div>
+          <p>Powered by Gemma 4 native tool-calling with the Graphify knowledge graph.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: Benchmark Trace -->
+    <div id="tab-trace" style="display:none">
+      <div id="traceOut">
+        <div class="empty-wrap">
+          <div class="empty-icon">&#128202;</div>
+          <p>Run an audit to view per-stage latency benchmarks and model telemetry.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+/* ============================================================
+   API BASE URL — configurable for Vercel / ngrok deployments
+   Default: '' means relative URLs (works when served from same origin as backend)
+   When frontend is on Vercel and backend is local, set this to your ngrok/cloudflare URL
+   e.g. "https://abc123.ngrok.io" — stored in localStorage
+   ============================================================ */
+(function() {
+  const saved = localStorage.getItem('LEDGERLENS_API_BASE');
+  window.API_BASE = saved || '';
+})();
+
+let picked = null;
+const $ = (id) => document.getElementById(id);
+
+/* ---------- Backend Config Modal ---------- */
+function openBackendConfig() {
+  const modal = document.getElementById('configModal');
+  document.getElementById('apiBaseInput').value = window.API_BASE || '';
+  modal.style.display = 'flex';
+}
+function closeBackendConfig() {
+  document.getElementById('configModal').style.display = 'none';
+}
+function saveBackendConfig() {
+  const val = (document.getElementById('apiBaseInput').value || '').replace(/\/$/, '').trim();
+  window.API_BASE = val;
+  if (val) {
+    localStorage.setItem('LEDGERLENS_API_BASE', val);
+  } else {
+    localStorage.removeItem('LEDGERLENS_API_BASE');
+  }
+  // Update graph links dynamically
+  updateGraphLinks();
+  closeBackendConfig();
+  // Show confirmation toast
+  showToast(val ? `✅ Backend set to: ${val}` : '✅ Backend set to localhost (relative)');
+}
+function updateGraphLinks() {
+  const graphUrl = (window.API_BASE || '') + '/api/graph';
+  const headerLink = document.getElementById('headerGraphLink');
+  const graphOpen = document.getElementById('graphOpenBtn');
+  const graphFrame = document.getElementById('graphFrame');
+  if (headerLink) headerLink.href = graphUrl;
+  if (graphOpen) graphOpen.href = graphUrl;
+  if (graphFrame) graphFrame.src = graphUrl;
+}
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1a1f2e;border:1px solid rgba(255,255,255,0.15);color:#fff;padding:12px 22px;border-radius:50px;font-size:13px;font-weight:600;z-index:99999;box-shadow:0 8px 32px rgba(0,0,0,0.5);transition:opacity 0.3s;';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
+}
+// Init graph links on load
+window.addEventListener('DOMContentLoaded', updateGraphLinks);
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'
+  }[c]));
+}
+
+function money(v) {
+  if (v == null || v === '') return '—';
+  return '₹' + Number(v).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+/* ---------- Segmented Tabs Switcher ---------- */
+document.querySelectorAll('.segment').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.segment').forEach(x => x.classList.remove('on'));
+  t.classList.add('on');
+  for (const name of ['audit', 'graph', 'code', 'trace']) {
+    const el = $('tab-' + name);
+    if (el) el.style.display = (name === t.dataset.tab) ? '' : 'none';
+  }
+}));
+
+/* ---------- Drag & Drop and Clipboard Paste (Ctrl+V) ---------- */
+const drop = $('drop'), fileInput = $('file');
+drop.addEventListener('click', () => fileInput.click());
+
+['dragenter', 'dragover'].forEach(e => drop.addEventListener(e, ev => {
+  ev.preventDefault(); drop.classList.add('hot');
+}));
+['dragleave', 'drop'].forEach(e => drop.addEventListener(e, ev => {
+  ev.preventDefault(); drop.classList.remove('hot');
+}));
+drop.addEventListener('drop', ev => {
+  const f = ev.dataTransfer && ev.dataTransfer.files[0];
+  if (f) takeFile(f);
+});
+fileInput.addEventListener('change', () => {
+  if (fileInput.files[0]) takeFile(fileInput.files[0]);
+});
+
+window.addEventListener('paste', e => {
+  const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].type.indexOf('image') !== -1) {
+      const file = items[i].getAsFile();
+      takeFile(file);
+      break;
+    }
+  }
+});
+
+function takeFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const dataUrl = reader.result;
+    picked = { base64: dataUrl.split(',')[1], mime: file.type || 'image/png', dataUrl };
+    $('dropInner').innerHTML = '<img src="' + dataUrl + '">' +
+      '<div style="font-size:12px; font-weight:700; color:#fff;">' + esc(file.name || 'Pasted Image') + '</div>' +
+      '<div style="font-size:11px; color:var(--fg-muted);">' + (file.size ? (file.size / 1024).toFixed(1) + ' KB' : 'Ready') + '</div>';
+    $('run').disabled = false;
+    $('clearBtn').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+$('clearBtn').addEventListener('click', e => {
+  e.stopPropagation();
+  picked = null;
+  fileInput.value = '';
+  $('dropInner').innerHTML = 
+    '<div style="font-size: 30px; margin-bottom: 6px;">&#128247;</div>' +
+    '<div class="drop-main">Drop bill photo or <span style="color:var(--apple-blue); text-decoration:underline;">browse</span></div>' +
+    '<div class="drop-sub">JPG, PNG, WEBP &middot; or press <b>Ctrl+V</b> to paste screenshot</div>';
+  $('run').disabled = true;
+  $('clearBtn').style.display = 'none';
+});
+
+/* ---------- Preset Sample Bill Generator ---------- */
+function generatePreset(title, gstin, items, subtotal, taxRows, total, isError = false) {
+  const c = document.createElement('canvas');
+  c.width = 640;
+  c.height = 360;
+  const ctx = c.getContext('2d');
+  
+  ctx.fillStyle = '#faf8f5';
+  ctx.fillRect(0, 0, 640, 360);
+  
+  ctx.fillStyle = '#1e293b';
+  ctx.font = 'bold 20px "Courier New", monospace';
+  ctx.fillText(title, 30, 38);
+  
+  ctx.fillStyle = '#64748b';
+  ctx.font = '13px "Courier New", monospace';
+  ctx.fillText('GSTIN: ' + gstin + '   |   Date: 22-OCT-2026', 30, 64);
+  
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath();
+  ctx.moveTo(30, 78); ctx.lineTo(610, 78);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  let y = 104;
+  ctx.fillStyle = '#0f172a';
+  ctx.font = '14px "Courier New", monospace';
+  items.forEach(it => {
+    ctx.fillText(it[0], 30, y);
+    ctx.fillText(it[1], 480, y);
+    y += 24;
+  });
+  
+  y += 6;
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.beginPath();
+  ctx.moveTo(30, y); ctx.lineTo(610, y);
+  ctx.stroke();
+  y += 22;
+  
+  ctx.fillText('Subtotal', 30, y);
+  ctx.fillText(subtotal, 480, y);
+  y += 22;
+  
+  taxRows.forEach(tx => {
+    ctx.fillText(tx[0], 30, y);
+    ctx.fillText(tx[1], 480, y);
+    y += 22;
+  });
+  
+  y += 6;
+  ctx.strokeStyle = '#0f172a';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(30, y); ctx.lineTo(610, y);
+  ctx.stroke();
+  y += 26;
+  
+  ctx.fillStyle = isError ? '#b91c1c' : '#0f172a';
+  ctx.font = 'bold 18px "Courier New", monospace';
+  ctx.fillText('GRAND TOTAL', 30, y);
+  ctx.fillText(total, 460, y);
+
+  const dataUrl = c.toDataURL('image/png');
+  picked = { base64: dataUrl.split(',')[1], mime: 'image/png', dataUrl };
+  $('dropInner').innerHTML = '<img src="' + dataUrl + '">' +
+    '<div style="font-size:12px; font-weight:700; color:#fff;">' + esc(title) + '</div>' +
+    '<div style="font-size:11px; color:var(--apple-cyan);">Preset Loaded &middot; Ready to Audit</div>';
+  $('run').disabled = false;
+  $('clearBtn').style.display = 'block';
+  runAudit();
+}
+
+$('presetRest').addEventListener('click', () => {
+  generatePreset('SHREE RESTAURANT & BISTRO', '27ABCDE1234F1Z5', [
+    ['2 x Masala Dosa', 'Rs 160.00'],
+    ['1 x Filter Coffee', 'Rs  50.00']
+  ], 'Rs 210.00', [
+    ['CGST 5%', 'Rs  10.50'],
+    ['SGST 5%', 'Rs  10.50']
+  ], 'Rs 231.00');
+});
+
+$('presetMathErr').addEventListener('click', () => {
+  generatePreset('MODERN SUPERMARKET PUNE', '27XYZAB9876C1Z3', [
+    ['1 x Basmati Rice 5kg', 'Rs 450.00'],
+    ['2 x Sunflower Oil 1L', 'Rs 260.00'],
+    ['1 x Organic Honey 500g', 'Rs 190.00']
+  ], 'Rs 950.00', [ // 450+260+190 is 900, but printed 950!
+    ['CGST 2.5%', 'Rs  23.75'],
+    ['SGST 2.5%', 'Rs  23.75']
+  ], 'Rs 997.50', true);
+});
+
+$('presetTech').addEventListener('click', () => {
+  generatePreset('NEXUS TECH SOLUTIONS B2B', '29AABCN1234P1Z8', [
+    ['1 x USB-C Multiport Dock', 'Rs 3500.00'],
+    ['1 x Wireless Mechanical KB', 'Rs 4500.00']
+  ], 'Rs 8000.00', [
+    ['IGST 18%', 'Rs 1440.00']
+  ], 'Rs 9440.00');
+});
+
+$('presetCab').addEventListener('click', () => {
+  generatePreset('FASTTRACK AIRPORT TAXI', '27CABXY7890D1Z2', [
+    ['Airport Transfer Fare', 'Rs 750.00'],
+    ['Highway Toll Surcharge', 'Rs 120.00']
+  ], 'Rs 870.00', [
+    ['GST 5%', 'Rs  43.50']
+  ], 'Rs 913.50');
+});
+
+/* ---------- Visual Stepper Updates ---------- */
+function setStep(step, state, ms) {
+  const el = $('pipe' + step);
+  if (!el) return;
+  el.className = 'step-node ' + state;
+  const timeEl = $('time' + step);
+  if (timeEl && ms != null) timeEl.innerText = ms + 'ms';
+}
+
+function resetStepper() {
+  ['Route', 'Extract', 'Python', 'Redact', 'Advise'].forEach(s => {
+    setStep(s, 'waiting', '—');
+  });
+}
+
+/* ---------- Execute Audit ---------- */
+async function runAudit() {
+  if (!picked) {
+    alert('Please pick or drop a bill image first, or click a preset.');
+    return;
+  }
+  const btn = $('run');
+  btn.disabled = true;
+  resetStepper();
+
+  setStep('Route', 'active');
+  setStep('Extract', 'active');
+
+  $('auditOut').innerHTML = 
+    '<div class="empty-wrap">' +
+      '<div class="spin" style="width:30px; height:30px; border-width:3px; margin-bottom:14px;"></div>' +
+      '<div style="font-weight:700; font-size:16px; color:#fff;">Auditing Document with Gemma 4...</div>' +
+      '<div style="font-size:12.5px; color:var(--fg-muted); margin-top:4px;">Extracting line items &rarr; running exact arithmetic audit &rarr; checking GST slabs.</div>' +
+    '</div>';
+
+  const body = {
+    image_base64: picked.base64,
+    mime_type: picked.mime,
+    prompt: $('prompt').value,
+    language: $('lang').value,
+    route: $('route').value,
+    enable_tools: true,
+    thinking: $('think').value,
+    use_local: true
+  };
+
+  try {
+    const res = await fetch(window.API_BASE + '/api/audit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseErr) {
+      throw new Error(text || 'Invalid server response');
+    }
+
+    if (!res.ok || (data && data.ok === false)) {
+      renderError(data ? (data.error || data.detail || 'Audit error') : ('HTTP ' + res.status));
+      return;
+    }
+
+    renderAudit(data);
+    renderTrace(data);
+  } catch (err) {
+    renderError(err.message || 'Network request failed. Please check backend connection.');
+  } finally {
+    btn.disabled = false;
+  }
+}
+$('run').addEventListener('click', runAudit);
+
+function renderError(msg) {
+  resetStepper();
+  $('auditOut').innerHTML = 
+    '<div style="background:var(--apple-red-bg); border:1px solid rgba(255, 69, 58, 0.35); border-radius:var(--radius-md); padding:18px;">' +
+      '<h3 style="margin:0 0 6px; font-size:15px; color:var(--apple-red);">&#9888;&#65039; Audit Request Failed</h3>' +
+      '<p style="margin:0; font-size:13px; color:#fff;">' + esc(msg) + '</p>' +
+      '<div style="margin-top:12px; display:flex; gap:8px;">' +
+        '<button class="apple-btn-sm" style="background:var(--apple-red); border:none;" onclick="runAudit()">&#128260; Retry Audit</button>' +
+        '<button class="apple-btn-sm" onclick="switchRouteAndRetry()">Use Cloud Fast Tier</button>' +
+      '</div>' +
+    '</div>';
+}
+
+function switchRouteAndRetry() {
+  $('route').value = 'cloud_fast';
+  $('think').value = 'minimal';
+  runAudit();
+}
+
+/* ---------- Render Successful Audit Report ---------- */
+function renderAudit(d) {
+  const r = d.route || {};
+  const bill = d.bill || {};
+  const findings = d.findings || [];
+  const entries = d.entries || [];
+  const timings = d.timings || {};
+
+  if (timings.route_ms != null) setStep('Route', 'done', timings.route_ms);
+  if (timings.extract_ms != null) setStep('Extract', 'done', timings.extract_ms);
+  if (timings.python_audit_ms != null) setStep('Python', 'done', timings.python_audit_ms);
+  if (timings.redact_ms != null) setStep('Redact', 'done', timings.redact_ms);
+  if (timings.advise_ms != null) setStep('Advise', 'done', timings.advise_ms);
+
+  const hasCritical = findings.some(f => f.severity === 'critical');
+  const hasWarning = findings.some(f => f.severity === 'warning');
+  let vClass = 'v-ok', vIcon = '&#10003;', vTitle = 'AUDIT PASSED &middot; OK TO POST';
+  let vSub = 'Exact arithmetic balances, GST rates verified, and accounting entries generated.';
+  
+  if (hasCritical) {
+    vClass = 'v-crit'; vIcon = '&#10007;'; vTitle = 'PROBLEM DETECTED &middot; DO NOT POST';
+    vSub = 'Critical discrepancy caught by Python arithmetic engine. Review before posting.';
+  } else if (hasWarning) {
+    vClass = 'v-warn'; vIcon = '!'; vTitle = 'REVIEW RECOMMENDED';
+    vSub = 'Anomalies or non-standard tax rates detected by Gemma 4 auditor.';
+  }
+
+  let h = '';
+
+  // 1. Verdict Hero Card
+  h += '<div class="verdict-hero ' + vClass + '">' +
+    '<div style="display:flex; align-items:center; gap:12px;">' +
+      '<div class="verdict-badge-icon">' + vIcon + '</div>' +
+      '<div>' +
+        '<div style="font-size:11px; text-transform:uppercase; font-weight:700; letter-spacing:0.8px; color:var(--fg-muted);">Audit Decision &middot; Gemma 4</div>' +
+        '<div style="font-size:17px; font-weight:800; color:#fff;">' + vTitle + '</div>' +
+        '<div style="font-size:12px; color:#fff; opacity:0.85; margin-top:2px;">' + esc(vSub) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="text-align:right;">' +
+      '<span class="apple-pill">Tier: <b>' + esc(r.tier || 'cloud_fast') + '</b></span>' +
+    '</div>' +
+  '</div>';
+
+  // 2. High-Impact Graphify Feature Card Inside Output Itself!
+  const graphUrl = (window.API_BASE || '') + '/api/graph';
+  h += '<div class="graph-banner-card">' +
+    '<div class="graph-banner-top">' +
+      '<div class="graph-title-row">' +
+        '<div class="graph-icon-bubble">&#128376;</div>' +
+        '<div>' +
+          '<div style="font-size:14px; font-weight:800; color:#fff;">Codebase Knowledge Graph &middot; Graphify</div>' +
+          '<div style="font-size:12px; color:var(--fg-secondary);">Live interactive map &rarr; <b><a href="' + graphUrl + '" target="_blank" style="color:#29d3f5; text-decoration:none;">' + graphUrl + '</a></b></div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex; gap:8px;">' +
+        '<a href="' + graphUrl + '" target="_blank" class="graph-link-btn">&#8599; Open Live Graph in New Tab</a>' +
+        '<button class="apple-btn-sm" onclick="toggleInlineGraph()">Show/Hide Inline Graph</button>' +
+      '</div>' +
+    '</div>' +
+    '<div id="inlineGraphBox" style="display:none; margin-top:14px;">' +
+      '<iframe src="' + graphUrl + '" style="width:100%; height:420px; border:1px solid var(--card-border); border-radius:12px; background:#fff;"></iframe>' +
+    '</div>' +
+    '<div style="margin-top:14px; padding-top:12px; border-top:1px solid rgba(255,255,255,0.08); font-size:12.5px; color:#e2e8f0; line-height:1.6;">' +
+      '<b>What is this Graph? — Gemma 4 Explains:</b><br>' +
+      '&bull; <b>204 Nodes &middot; 409 Edges &middot; 14 Communities</b>: Graphify extracted the entire architecture of this hybrid pipeline into a live knowledge graph.<br>' +
+      '&bull; <b>Core Abstractions ("God Nodes")</b>: <code>audit()</code>, <code>LocalBackend</code>, <code>GeminiBackend</code>, <code>Router</code>, and <code>build_registry()</code> form the central bridges.<br>' +
+      '&bull; <b>Native Gemma 4 Function Calling</b>: Gemma 4 calls Graphify natively via <code>graphify_query</code>, <code>graphify_explain</code>, and <code>graphify_path</code> to inspect its own code structure and dependencies.' +
+    '</div>' +
+  '</div>';
+
+  // 3. Extracted Metrics
+  h += '<div class="metrics-grid">' +
+    '<div class="m-box"><div class="m-label">Vendor</div><div class="m-value" style="font-size:13px; font-family:var(--font);">' + esc(bill.vendor_name || '—') + '</div></div>' +
+    '<div class="m-box"><div class="m-label">GSTIN</div><div class="m-value" style="font-size:12px;">' + esc(bill.vendor_gstin || '—') + '</div></div>' +
+    '<div class="m-box"><div class="m-label">Subtotal</div><div class="m-value">' + money(bill.subtotal) + '</div></div>' +
+    '<div class="m-box"><div class="m-label">Tax Total</div><div class="m-value">' + money(bill.tax_total) + '</div></div>' +
+    '<div class="m-box"><div class="m-label">Grand Total</div><div class="m-value" style="color:var(--apple-green);">' + money(bill.total) + '</div></div>' +
+  '</div>';
+
+  // 4. Accounting Entries Section
+  if (entries.length) {
+    let totDebit = 0, totCredit = 0;
+    entries.forEach(e => { totDebit += (e.debit || 0); totCredit += (e.credit || 0); });
+    const isBalanced = Math.abs(totDebit - totCredit) < 0.05;
+
+    h += '<div class="apple-box">' +
+      '<div class="box-top">' +
+        '<div class="box-title">&#128218; Suggested Journal Entries (Double-Entry Ledger)</div>' +
+        '<div style="display:flex; gap:6px;">' +
+          (isBalanced ? '<span class="badge-balanced">&#10003; Balanced ₹' + totDebit.toFixed(2) + '</span>' : '') +
+          '<button class="apple-btn-sm" onclick="copyEntries()">&#128203; Copy for Tally</button>' +
+          '<button class="apple-btn-sm" onclick="downloadEntriesCSV()">Download CSV</button>' +
+        '</div>' +
+      '</div>' +
+      '<table><thead><tr><th>Account Name</th><th class="num">Debit</th><th class="num">Credit</th><th>Narration</th></tr></thead><tbody>';
+
+    for (const e of entries) {
+      h += '<tr>' +
+        '<td><b>' + esc(e.account) + '</b></td>' +
+        '<td class="num">' + (e.debit > 0 ? money(e.debit) : '—') + '</td>' +
+        '<td class="num">' + (e.credit > 0 ? money(e.credit) : '—') + '</td>' +
+        '<td style="color:var(--fg-muted); font-size:12px;">' + esc(e.narration || 'Bill posting') + '</td>' +
+      '</tr>';
+    }
+    h += '</tbody></table></div>';
+  }
+
+  // 5. Line Items Breakdown
+  if ((bill.line_items || []).length) {
+    h += '<div class="apple-box">' +
+      '<div class="box-top">' +
+        '<div class="box-title">&#128221; Extracted Line Items (' + bill.line_items.length + ')</div>' +
+      '</div>' +
+      '<table><thead><tr><th>Description</th><th class="num">Qty</th><th class="num">Unit Rate</th><th class="num">Tax%</th><th class="num">Amount</th></tr></thead><tbody>';
+    for (const it of bill.line_items) {
+      h += '<tr>' +
+        '<td>' + esc(it.description) + '</td>' +
+        '<td class="num">' + (it.quantity ?? '1') + '</td>' +
+        '<td class="num">' + (it.unit_price != null ? money(it.unit_price) : '—') + '</td>' +
+        '<td class="num">' + (it.tax_rate != null ? it.tax_rate + '%' : '—') + '</td>' +
+        '<td class="num"><b>' + money(it.amount) + '</b></td>' +
+      '</tr>';
+    }
+    h += '</tbody></table></div>';
+  }
+
+  // 6. Findings Section
+  h += '<div class="apple-box">' +
+    '<div class="box-top">' +
+      '<div class="box-title">&#128269; Audit Findings (' + findings.length + ')</div>' +
+    '</div>';
+  
+  if (!findings.length) {
+    h += '<div style="color:var(--apple-green); font-size:13px; font-weight:600; padding:4px 0;">&#10003; No arithmetic or compliance anomalies detected.</div>';
+  } else {
+    for (const f of findings) {
+      const bClass = f.severity === 'critical' ? 'fb-crit' : (f.severity === 'warning' ? 'fb-warn' : 'fb-info');
+      h += '<div class="finding-row">' +
+        '<span class="f-badge ' + bClass + '">' + esc(f.severity) + '</span>' +
+        '<div style="flex:1;">' +
+          '<div style="font-weight:700; color:#fff; font-size:13px;">' + esc(f.title) + '<span style="font-size:10.5px; color:var(--fg-muted); margin-left:6px; font-family:var(--mono);">[' + esc(f.source) + ']</span></div>' +
+          '<div style="color:var(--fg-secondary); font-size:12.5px; margin-top:3px; line-height:1.45;">' + esc(f.detail) + '</div>' +
+        '</div>' +
+      '</div>';
+    }
+  }
+  h += '</div>';
+
+  // 7. Advisory Explanation Note
+  if (d.explanation) {
+    h += '<div class="apple-box">' +
+      '<div class="box-top">' +
+        '<div class="box-title">&#128172; Advisory Summary (' + esc(d.language || 'English') + ')</div>' +
+      '</div>' +
+      '<div class="apple-prose">' + formatMarkdown(d.explanation) + '</div>' +
+    '</div>';
+  }
+
+  $('auditOut').innerHTML = h;
+  window._lastEntries = entries;
+}
+
+window.toggleInlineGraph = function() {
+  const box = $('inlineGraphBox');
+  if (box) box.style.display = (box.style.display === 'none' ? 'block' : 'none');
+};
+
+function formatMarkdown(text) {
+  if (!text) return '';
+  let clean = text.replace(/```json[\s\S]*?```/g, '').trim();
+  let lines = clean.split('\n');
+  let out = '', inList = false;
+
+  for (let raw of lines) {
+    let line = raw.trim();
+    if (!line) {
+      if (inList) { out += '</ul>'; inList = false; }
+      continue;
+    }
+    if (line.startsWith('### ')) {
+      if (inList) { out += '</ul>'; inList = false; }
+      out += '<h4 style="margin:12px 0 6px; color:#fff; font-size:13.5px;">' + esc(line.slice(4)) + '</h4>';
+      continue;
+    }
+    if (line.startsWith('## ') || line.startsWith('# ')) {
+      if (inList) { out += '</ul>'; inList = false; }
+      out += '<h3 style="margin:14px 0 8px; color:#fff; font-size:14.5px;">' + esc(line.replace(/^#+\s*/, '')) + '</h3>';
+      continue;
+    }
+    if (line.startsWith('* ') || line.startsWith('- ') || line.startsWith('• ')) {
+      if (!inList) { out += '<ul>'; inList = true; }
+      let content = line.slice(2).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      out += '<li>' + content + '</li>';
+      continue;
+    }
+    if (inList) { out += '</ul>'; inList = false; }
+    let p = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    out += '<p>' + p + '</p>';
+  }
+  if (inList) out += '</ul>';
+  return out;
+}
+
+function copyEntries() {
+  const entries = window._lastEntries || [];
+  if (!entries.length) return;
+  const tsv = ['Account\tDebit\tCredit\tNarration']
+    .concat(entries.map(e => `${e.account}\t${e.debit || 0}\t${e.credit || 0}\t${e.narration || ''}`))
+    .join('\n');
+  navigator.clipboard.writeText(tsv).then(() => {
+    alert('Journal entries copied to clipboard! Ready to paste into Excel or Tally.');
+  });
+}
+
+function downloadEntriesCSV() {
+  const entries = window._lastEntries || [];
+  if (!entries.length) return;
+  const csv = ['Account,Debit,Credit,Narration']
+    .concat(entries.map(e => `"${e.account.replace(/"/g, '""')}",${e.debit || 0},${e.credit || 0},"${(e.narration || '').replace(/"/g, '""')}"`))
+    .join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ledger_entries.csv';
+  a.click();
+}
+
+/* ---------- Benchmark Trace Tab ---------- */
+function renderTrace(d) {
+  if (!d || !d.timings) return;
+  const order = [
+    ['route_ms', '0 · Request Routing (Local Gemma 4 E2B)'],
+    ['extract_ms', '1 · Multimodal Vision Extraction (Cloud Gemma 4)'],
+    ['python_audit_ms', '2 · Exact Float Arithmetic Verification (Python)'],
+    ['local_audit_ms', '2b · On-Device Plausibility & Redaction (Local Gemma 4 E2B)'],
+    ['redact_ms', '3 · Deterministic PII Scrubbing (Regex)'],
+    ['advise_ms', '4 · Advisory Reasoning & Function Calling (Cloud Gemma 4)']
+  ];
+
+  let h = '<div class="apple-box">' +
+    '<div class="box-top"><div class="box-title">Stage-by-Stage Latency Benchmark</div></div>' +
+    '<table><thead><tr><th>Pipeline Stage</th><th class="num">Time</th></tr></thead><tbody>';
+
+  for (const [k, label] of order) {
+    if (d.timings[k] != null) {
+      h += '<tr><td>' + label + '</td><td class="num"><b>' + d.timings[k] + ' ms</b></td></tr>';
+    }
+  }
+  h += '</tbody></table></div>';
+
+  h += '<div class="apple-box">' +
+    '<div class="box-top"><div class="box-title">Model Telemetry & Token Usage</div></div>' +
+    '<pre style="background:rgba(0,0,0,0.4); border:1px solid var(--card-border); border-radius:10px; padding:12px; font-size:12px; font-family:var(--mono); overflow:auto; max-height:360px;">' +
+      esc(JSON.stringify({ route: d.route, tiers_used: d.tiers_used, model_calls: d.model_calls }, null, 2)) +
+    '</pre></div>';
+
+  $('traceOut').innerHTML = h;
+}
+
+/* ---------- Codebase Assistant (Q&A) ---------- */
+window.askCode = function(q) {
+  $('codeQ').value = q;
+  $('codeRun').click();
+};
+
+$('codeRun').addEventListener('click', async () => {
+  const q = $('codeQ').value.trim();
+  if (!q) return;
+
+  $('codeOut').innerHTML = 
+    '<div class="empty-wrap">' +
+      '<div class="spin" style="width:24px; height:24px; margin-bottom:8px;"></div>' +
+      '<div>Gemma 4 querying codebase graph...</div>' +
+    '</div>';
+
+  try {
+    const res = await fetch(window.API_BASE + '/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: q,
+        route: 'cloud_fast',
+        enable_tools: true,
+        thinking: 'minimal'
+      })
+    });
+    const d = await res.json();
+    let h = '<div class="apple-box">' +
+      '<div class="box-top"><div class="box-title">Gemma 4 Response</div></div>' +
+      '<div class="apple-prose">' + formatMarkdown(d.text || d.error || '(no response)') + '</div>' +
+    '</div>';
+
+    if (d.tool_calls && d.tool_calls.length) {
+      h += '<div class="apple-box">' +
+        '<div class="box-top"><div class="box-title">Native Tool Calls Executed (' + d.tool_calls.length + ')</div></div>' +
+        '<pre style="background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; font-size:11.5px; font-family:var(--mono);">' +
+          esc(JSON.stringify(d.tool_calls, null, 2)) +
+        '</pre></div>';
+    }
+    $('codeOut').innerHTML = h;
+  } catch (err) {
+    $('codeOut').innerHTML = '<div style="color:var(--apple-red); padding:14px;">Error: ' + esc(err.message) + '</div>';
+  }
+});
+$('codeQ').addEventListener('keydown', e => { if (e.key === 'Enter') $('codeRun').click(); });
+</script>
+</body>
+</html>

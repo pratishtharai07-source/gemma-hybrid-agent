@@ -1,0 +1,19 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+*.gguf
+models/
+.pytest_cache/
+.ruff_cache/
+*.log
+graphify-out/cache/
+graphify-out/*.cache
+node_modules/
+.vercel/
+
+# llama.cpp Windows binaries — large, not needed on Vercel
+tools/llamacpp/*.exe
+tools/llamacpp/*.dll
+tools/

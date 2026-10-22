@@ -1,0 +1,398 @@
+{
+  "communities": {
+    "0": [
+      "app_tools",
+      "app_tools_build_registry",
+      "app_tools_build_registry_calculate",
+      "app_tools_build_registry_current_datetime",
+      "app_tools_build_registry_fetch_url",
+      "app_tools_build_registry_graphify_explain",
+      "app_tools_build_registry_graphify_path",
+      "app_tools_build_registry_graphify_query",
+      "app_tools_build_registry_gst_slab",
+      "app_tools_fetch_url",
+      "app_tools_find_graphify",
+      "app_tools_gst_reference",
+      "app_tools_is_public_host",
+      "app_tools_py_any",
+      "app_tools_rationale_1",
+      "app_tools_rationale_104",
+      "app_tools_rationale_143",
+      "app_tools_rationale_180",
+      "app_tools_rationale_236",
+      "app_tools_rationale_259",
+      "app_tools_rationale_51",
+      "app_tools_rationale_80",
+      "app_tools_run_graphify",
+      "app_tools_safe_arithmetic",
+      "app_tools_safe_arithmetic_eval",
+      "app_tools_socket_getaddrinfo",
+      "app_tools_tool",
+      "app_tools_toolregistry",
+      "app_tools_toolregistry_add",
+      "app_tools_toolregistry_declarations",
+      "app_tools_toolregistry_execute",
+      "app_tools_toolregistry_gemini_tools",
+      "app_tools_toolregistry_get",
+      "ast",
+      "datetime",
+      "html",
+      "ipaddress",
+      "operator",
+      "shutil",
+      "subprocess",
+      "sysconfig",
+      "urllib_parse"
+    ],
+    "1": [
+      "app_backends_base",
+      "app_backends_base_backendresult",
+      "app_backends_base_backendresult_to_dict",
+      "app_backends_base_py_any",
+      "app_backends_base_rationale_1",
+      "app_backends_base_rationale_20",
+      "app_backends_base_rationale_31",
+      "app_backends_base_toolcall",
+      "app_backends_base_toolcall_to_dict",
+      "app_backends_gemini",
+      "app_backends_gemini_key_candidates",
+      "app_backends_gemini_list_gemma_models",
+      "app_backends_gemini_rationale_1",
+      "app_backends_gemini_rationale_229",
+      "app_backends_gemini_rationale_34",
+      "app_backends_init",
+      "app_backends_init_rationale_1",
+      "app_backends_local",
+      "app_backends_local_localbackend",
+      "app_backends_local_localbackend_chat",
+      "app_backends_local_localbackend_detect_mode",
+      "app_backends_local_localbackend_health",
+      "app_backends_local_localbackend_image_message",
+      "app_backends_local_localbackend_init",
+      "app_backends_local_py_any",
+      "app_backends_local_rationale_1",
+      "app_backends_local_rationale_104",
+      "app_backends_local_rationale_172",
+      "app_backends_local_rationale_30",
+      "app_backends_local_rationale_38",
+      "asyncio",
+      "google",
+      "google_genai",
+      "typing"
+    ],
+    "2": [
+      "app_backends_base_extract_json",
+      "app_backends_base_rationale_55",
+      "app_router",
+      "app_router_dumps",
+      "app_router_matches",
+      "app_router_py_any",
+      "app_router_rationale_1",
+      "app_router_rationale_185",
+      "app_router_rationale_228",
+      "app_router_rationale_251",
+      "app_router_rationale_80",
+      "app_router_rationale_98",
+      "app_router_router",
+      "app_router_router_decide",
+      "app_router_router_init",
+      "app_router_router_triage",
+      "app_router_salvage_triage",
+      "app_schemas_routedecision",
+      "json",
+      "re"
+    ],
+    "3": [
+      "app_backends_gemini_geminibackend",
+      "app_backends_gemini_geminibackend_build_client",
+      "app_backends_gemini_geminibackend_client",
+      "app_backends_gemini_geminibackend_generate",
+      "app_backends_gemini_geminibackend_generate_build",
+      "app_backends_gemini_geminibackend_init",
+      "app_backends_gemini_geminibackend_tool_response_part",
+      "app_backends_gemini_geminibackend_with_retry",
+      "app_backends_gemini_py_any",
+      "app_backends_gemini_rationale_126",
+      "app_backends_gemini_rationale_212",
+      "app_backends_gemini_rationale_220",
+      "app_backends_gemini_rationale_47",
+      "app_backends_gemini_rationale_59",
+      "app_backends_gemini_rationale_89",
+      "app_backends_gemini_status_of",
+      "client",
+      "exception",
+      "schema"
+    ],
+    "4": [
+      "app_config",
+      "app_config_bool",
+      "app_config_float",
+      "app_config_int",
+      "app_config_rationale_1",
+      "app_config_rationale_80",
+      "app_config_settings",
+      "app_config_settings_cloud_ready",
+      "app_config_settings_public_dict",
+      "app_config_str",
+      "app_prompts",
+      "app_prompts_build_advisor_system",
+      "app_prompts_rationale_1",
+      "app_prompts_rationale_142",
+      "dataclasses",
+      "dotenv",
+      "os"
+    ],
+    "5": [
+      "app_schemas",
+      "app_schemas_accountingentry",
+      "app_schemas_auditrequest",
+      "app_schemas_auditresponse",
+      "app_schemas_billfields",
+      "app_schemas_chatrequest",
+      "app_schemas_chatresponse",
+      "app_schemas_lineitem",
+      "app_schemas_localaudit",
+      "app_schemas_rationale_1",
+      "app_schemas_rationale_30",
+      "app_schemas_rationale_47",
+      "app_schemas_rationale_60",
+      "app_schemas_triageverdict",
+      "basemodel",
+      "pydantic"
+    ],
+    "6": [
+      "app_main_rationale_268",
+      "app_main_split_image",
+      "base64",
+      "httpx",
+      "io",
+      "pathlib",
+      "scripts_smoke_test",
+      "scripts_smoke_test_main",
+      "scripts_smoke_test_make_receipt",
+      "scripts_smoke_test_rationale_2",
+      "scripts_smoke_test_rationale_37",
+      "scripts_smoke_test_record",
+      "sys"
+    ],
+    "7": [
+      "app_main",
+      "app_main_graphify_available",
+      "app_main_health",
+      "app_main_main",
+      "app_main_rationale_1",
+      "binascii",
+      "fastapi",
+      "fastapi_middleware_cors",
+      "fastapi_responses",
+      "fastapi_staticfiles",
+      "jsonresponse"
+    ],
+    "8": [
+      "app_main_chat",
+      "app_main_rationale_348",
+      "app_main_rationale_433",
+      "app_main_rationale_674",
+      "app_main_run_tool_loop",
+      "app_main_triage_endpoint",
+      "post",
+      "time"
+    ],
+    "9": [
+      "app_main_graph_endpoint",
+      "app_main_index",
+      "app_main_py_any",
+      "app_main_rationale_293",
+      "app_main_rationale_779",
+      "app_main_structured",
+      "app_main_tools_endpoint",
+      "get"
+    ],
+    "10": [
+      "app_main_audit",
+      "app_main_f",
+      "app_main_python_audit",
+      "app_main_rationale_103",
+      "app_main_rationale_118",
+      "app_schemas_auditfinding"
+    ],
+    "11": [
+      "app_main_rationale_230",
+      "app_main_rationale_238",
+      "app_main_redact_bill",
+      "app_main_scrub_pii"
+    ],
+    "12": [
+      "scripts_setup_local",
+      "scripts_setup_local_write_ok",
+      "scripts_setup_local_write_step",
+      "scripts_setup_local_write_warn2"
+    ],
+    "13": [
+      "app_init",
+      "app_init_rationale_1"
+    ]
+  },
+  "cohesion": {
+    "0": 0.07549361207897794,
+    "1": 0.10160427807486631,
+    "2": 0.16842105263157894,
+    "3": 0.13450292397660818,
+    "4": 0.15441176470588236,
+    "5": 0.19166666666666668,
+    "6": 0.21794871794871795,
+    "7": 0.2,
+    "8": 0.25,
+    "9": 0.32142857142857145,
+    "10": 0.4666666666666667,
+    "11": 0.5,
+    "12": 0.5,
+    "13": 1.0
+  },
+  "gods": [
+    {
+      "id": "app_main_audit",
+      "label": "audit()",
+      "degree": 18
+    },
+    {
+      "id": "app_backends_base_backendresult",
+      "label": "BackendResult",
+      "degree": 14
+    },
+    {
+      "id": "app_backends_local_localbackend",
+      "label": "LocalBackend",
+      "degree": 14
+    },
+    {
+      "id": "app_backends_gemini_geminibackend",
+      "label": "GeminiBackend",
+      "degree": 14
+    },
+    {
+      "id": "app_tools_build_registry",
+      "label": "build_registry()",
+      "degree": 13
+    },
+    {
+      "id": "app_backends_base_extract_json",
+      "label": "extract_json()",
+      "degree": 11
+    },
+    {
+      "id": "app_backends_base_toolcall",
+      "label": "ToolCall",
+      "degree": 10
+    },
+    {
+      "id": "app_router_router",
+      "label": "Router",
+      "degree": 9
+    },
+    {
+      "id": "app_backends_gemini_list_gemma_models",
+      "label": "list_gemma_models()",
+      "degree": 8
+    },
+    {
+      "id": "app_main_run_tool_loop",
+      "label": "_run_tool_loop()",
+      "degree": 8
+    }
+  ],
+  "surprises": [
+    {
+      "source": "GeminiBackend",
+      "target": "BackendResult",
+      "source_files": [
+        "app/backends/gemini.py",
+        "app/backends/base.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "_run_tool_loop()",
+      "target": "BackendResult",
+      "source_files": [
+        "app/main.py",
+        "app/backends/base.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "Router",
+      "target": "BackendResult",
+      "source_files": [
+        "app/router.py",
+        "app/backends/base.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "GeminiBackend",
+      "target": "ToolCall",
+      "source_files": [
+        "app/backends/gemini.py",
+        "app/backends/base.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "Router",
+      "target": "LocalBackend",
+      "source_files": [
+        "app/router.py",
+        "app/backends/local.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `build_registry()` connect `Community 0` to `Community 7`?",
+      "why": "High betweenness centrality (0.094) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 6 inferred relationships involving `audit()` (e.g. with `AccountingEntry` and `AuditFinding`) actually correct?",
+      "why": "`audit()` has 6 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.07549361207897794 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `LocalBackend` connect `Community 1` to `Community 2`, `Community 7`?",
+      "why": "High betweenness centrality (0.085) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 4 inferred relationships involving `BackendResult` (e.g. with `GeminiBackend` and `LocalBackend`) actually correct?",
+      "why": "`BackendResult` has 4 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.10160427807486631 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `GeminiBackend` connect `Community 3` to `Community 8`, `Community 1`, `Community 7`?",
+      "why": "High betweenness centrality (0.079) - this node is a cross-community bridge."
+    }
+  ]
+}

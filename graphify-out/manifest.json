@@ -1,0 +1,80 @@
+{
+  "app/__init__.py": {
+    "mtime": 1792648241.2266257,
+    "seen": 1792652209.0960722,
+    "ast_hash": "7d76964378d49ead51ea87321af87426",
+    "semantic_hash": "7d76964378d49ead51ea87321af87426"
+  },
+  "app/backends/__init__.py": {
+    "mtime": 1792649724.4414926,
+    "seen": 1792652209.0961108,
+    "ast_hash": "e6dab24d6cdc3b653c999d1255e71e2f",
+    "semantic_hash": "e6dab24d6cdc3b653c999d1255e71e2f"
+  },
+  "app/backends/base.py": {
+    "mtime": 1792649389.3707225,
+    "seen": 1792652209.0961199,
+    "ast_hash": "9f0bf665c26cbb60559f9eab70639fc9",
+    "semantic_hash": "9f0bf665c26cbb60559f9eab70639fc9"
+  },
+  "app/backends/gemini.py": {
+    "mtime": 1792649422.9238584,
+    "seen": 1792652209.0961251,
+    "ast_hash": "ace5f139d1555995d69fd0c4472d2bdf",
+    "semantic_hash": "ace5f139d1555995d69fd0c4472d2bdf"
+  },
+  "app/backends/local.py": {
+    "mtime": 1792649456.2009315,
+    "seen": 1792652209.0961308,
+    "ast_hash": "52d7ba5dd1b2346ace44e98fa8b88b38",
+    "semantic_hash": "52d7ba5dd1b2346ace44e98fa8b88b38"
+  },
+  "app/config.py": {
+    "mtime": 1792648241.2246132,
+    "seen": 1792652209.0961359,
+    "ast_hash": "fed99c235f9755543a328d8fcffab96e",
+    "semantic_hash": "fed99c235f9755543a328d8fcffab96e"
+  },
+  "app/main.py": {
+    "mtime": 1792649803.6606658,
+    "seen": 1792652209.0961416,
+    "ast_hash": "0c5f7503ebe285337328fbd290fee1ef",
+    "semantic_hash": "0c5f7503ebe285337328fbd290fee1ef"
+  },
+  "app/prompts.py": {
+    "mtime": 1792649570.3062692,
+    "seen": 1792652209.096145,
+    "ast_hash": "e53c3a172db39c61ddbcc4624d69bb42",
+    "semantic_hash": "e53c3a172db39c61ddbcc4624d69bb42"
+  },
+  "app/router.py": {
+    "mtime": 1792649724.4414926,
+    "seen": 1792652209.0961485,
+    "ast_hash": "661f6ed1891c5d822e6a8082455b67ef",
+    "semantic_hash": "661f6ed1891c5d822e6a8082455b67ef"
+  },
+  "app/schemas.py": {
+    "mtime": 1792649532.4151504,
+    "seen": 1792652209.096153,
+    "ast_hash": "bb02b6925487b6fe180ed79ccad6ab41",
+    "semantic_hash": "bb02b6925487b6fe180ed79ccad6ab41"
+  },
+  "app/tools.py": {
+    "mtime": 1792649624.6512442,
+    "seen": 1792652209.0961578,
+    "ast_hash": "ce15c03e8ee2cc531b871d47f121eb8f",
+    "semantic_hash": "ce15c03e8ee2cc531b871d47f121eb8f"
+  },
+  "scripts/setup_local.ps1": {
+    "mtime": 1792651770.3680112,
+    "seen": 1792652209.096164,
+    "ast_hash": "5d9f76928e9a057d9a07b2e41dea05ab",
+    "semantic_hash": "5d9f76928e9a057d9a07b2e41dea05ab"
+  },
+  "scripts/smoke_test.py": {
+    "mtime": 1792651770.3680112,
+    "seen": 1792652209.0961707,
+    "ast_hash": "bd63b8e2132d65b3808d3aa238aac0af",
+    "semantic_hash": "bd63b8e2132d65b3808d3aa238aac0af"
+  }
+}
